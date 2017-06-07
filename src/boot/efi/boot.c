@@ -24,6 +24,8 @@
 #include "pe.h"
 #include "shim.h"
 #include "util.h"
+#include "bgrt.h"
+#include "splash.h"
 
 #ifndef EFI_OS_INDICATIONS_BOOT_TO_FW_UI
 #define EFI_OS_INDICATIONS_BOOT_TO_FW_UI 0x0000000000000001ULL
@@ -1846,6 +1848,12 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
                 /* export the selected boot entry to the system */
                 efivar_set(L"LoaderEntrySelected", entry->file, FALSE);
 
+                {
+                    int x, y;
+                    struct bmp_file *bgrt = find_bgrt(sys_table, &x, &y);
+                    if (bgrt)
+                        graphics_splash((UINT8*)bgrt, bgrt->size, NULL, x, y);
+                }
                 uefi_call_wrapper(BS->SetWatchdogTimer, 4, 5 * 60, 0x10000, 0, NULL);
                 err = image_start(image, &config, entry);
                 if (EFI_ERROR(err)) {

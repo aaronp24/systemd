@@ -104,7 +104,7 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
                 efivar_set(L"LoaderDevicePartUUID", uuid, FALSE);
 
         if (szs[3] > 0)
-                graphics_splash((UINT8 *)((UINTN)loaded_image->ImageBase + addrs[3]), szs[3], NULL);
+                graphics_splash((UINT8 *)((UINTN)loaded_image->ImageBase + addrs[3]), szs[3], NULL, -1, -1);
 
         err = linux_exec(image, cmdline, cmdline_len,
                          (UINTN)loaded_image->ImageBase + addrs[1],

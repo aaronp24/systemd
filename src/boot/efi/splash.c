@@ -20,13 +20,6 @@
 #include "splash.h"
 #include "util.h"
 
-struct bmp_file {
-        CHAR8 signature[2];
-        UINT32 size;
-        UINT16 reserved[2];
-        UINT32 offset;
-} __attribute__((packed));
-
 /* we require at least BITMAPINFOHEADER, later versions are
    accepted, but their features ignored */
 struct bmp_dib {
@@ -251,7 +244,7 @@ EFI_STATUS bmp_to_blt(EFI_GRAPHICS_OUTPUT_BLT_PIXEL *buf,
         return EFI_SUCCESS;
 }
 
-EFI_STATUS graphics_splash(UINT8 *content, UINTN len, const EFI_GRAPHICS_OUTPUT_BLT_PIXEL *background) {
+EFI_STATUS graphics_splash(UINT8 *content, UINTN len, const EFI_GRAPHICS_OUTPUT_BLT_PIXEL *background, int x, int y) {
         EFI_GRAPHICS_OUTPUT_BLT_PIXEL pixel = {};
         EFI_GUID GraphicsOutputProtocolGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
         EFI_GRAPHICS_OUTPUT_PROTOCOL *GraphicsOutput = NULL;
@@ -281,9 +274,13 @@ EFI_STATUS graphics_splash(UINT8 *content, UINTN len, const EFI_GRAPHICS_OUTPUT_
         if (EFI_ERROR(err))
                 goto err;
 
-        if (dib->x < GraphicsOutput->Mode->Info->HorizontalResolution)
+        if (x >= 0)
+                x_pos = x;
+        else if (dib->x < GraphicsOutput->Mode->Info->HorizontalResolution)
                 x_pos = (GraphicsOutput->Mode->Info->HorizontalResolution - dib->x) / 2;
-        if (dib->y < GraphicsOutput->Mode->Info->VerticalResolution)
+        if (y >= 0)
+                y_pos = y;
+        else if (dib->y < GraphicsOutput->Mode->Info->VerticalResolution)
                 y_pos = (GraphicsOutput->Mode->Info->VerticalResolution - dib->y) / 2;
 
         uefi_call_wrapper(GraphicsOutput->Blt, 10, GraphicsOutput,

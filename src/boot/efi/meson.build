@@ -8,6 +8,7 @@ efi_headers = files('''
         splash.h
         util.h
         shim.h
+        bgrt.h
 '''.split())
 
 common_sources = '''
@@ -16,6 +17,8 @@ common_sources = '''
         measure.c
         pe.c
         util.c
+        splash.c
+        bgrt.c
 '''.split()
 
 systemd_boot_sources = '''
@@ -26,7 +29,6 @@ systemd_boot_sources = '''
 
 stub_sources = '''
         linux.c
-        splash.c
         stub.c
 '''.split()
 

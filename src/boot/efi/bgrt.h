@@ -11,17 +11,13 @@
  *
  * Copyright (C) 2012-2013 Kay Sievers <kay@vrfy.org>
  * Copyright (C) 2012 Harald Hoyer <harald@redhat.com>
+ * Copyright (C) 2017 Aaron Plattner <aplattner@nvidia.com>
  */
 
-#ifndef __SDBOOT_SPLASH_H
-#define __SDBOOT_SPLASH_H
+#ifndef __SDBOOT_BGRT_H
+#define __SDBOOT_BGRT_H
 
-struct bmp_file {
-        CHAR8 signature[2];
-        UINT32 size;
-        UINT16 reserved[2];
-        UINT32 offset;
-} __attribute__((packed));
+#include "splash.h"
 
-EFI_STATUS graphics_splash(UINT8 *content, UINTN len, const EFI_GRAPHICS_OUTPUT_BLT_PIXEL *background, int x, int y);
+struct bmp_file* find_bgrt(const EFI_SYSTEM_TABLE *sys_table, int *x, int *y);
 #endif
